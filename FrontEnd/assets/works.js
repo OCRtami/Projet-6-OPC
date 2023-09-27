@@ -4,19 +4,14 @@ const works = await worksfetch.json();
 /* Dynamically creating all the works from the api  */
 function genererProjet(works) {
   for (let i = 0; i < works.length; i++) {
-
     const selectedWorks = works[i];
-
     const sectionGallery = document.querySelector(".gallery");
     const worksElement = document.createElement("figure");
-
     const imageElement = document.createElement("img");
+    const figcaptionElement = document.createElement("figcaption");
     imageElement.src = selectedWorks.imageUrl;
     imageElement.alt = selectedWorks.title;
-
-    const figcaptionElement = document.createElement("figcaption");
     figcaptionElement.innerText = selectedWorks.title;
-
     sectionGallery.appendChild(worksElement);
     worksElement.appendChild(imageElement);
     worksElement.appendChild(figcaptionElement)
@@ -25,62 +20,62 @@ function genererProjet(works) {
 
 genererProjet(works);
 
+//        Categories fetching for filter button
+const categoriesFetch = await fetch("http://localhost:5678/api/categories");
+const categories = await categoriesFetch.json();
 
-/* Tous FILTER */
-const tousButton = document.querySelector(".btn-tous");
+/*                    Creating the buttons and their classes                    */
 
-tousButton.addEventListener("click", () => {
+// No filter-button + his eventlistener
+const sectionFilter = document.querySelector(".filter");
+const noFilterButton = document.createElement("button");
+noFilterButton.classList.add("btn-nofilter");
+noFilterButton.classList.add("--selected")
+noFilterButton.innerText = "Tous";
+sectionFilter.appendChild(noFilterButton);
 
-  const tousFiltered = works.filter(function (tousFilter) {
-    return tousFilter.category.name;
-  });
-  document.querySelector(".gallery").innerHTML = ""
-  genererProjet(tousFiltered);
-})
-
-/* Objets FILTER */
-const objetsButton = document.querySelector(".btn-objets");
-
-objetsButton.addEventListener("click", () => {
-
-  const objectFiltered = works.filter(function (objectFilter) {
-    if (objectFilter.category.name == "Objets") {
-      return objectFilter;
-    }
-  });
-  // Deleting work and regenerating only corresponding works
+noFilterButton.addEventListener("click", () => {
   document.querySelector(".gallery").innerHTML = "";
-  genererProjet(objectFiltered)
+  removeSelectedClass();
+  noFilterButton.classList.add("--selected")
+  genererProjet(works);
 })
 
-/* Appartements FILTER */
-const appartementsButton = document.querySelector(".btn-appartements");
+//  filter-button 
+for (let i = 0; i < categories.length; i++) {
+  const button = document.createElement("button");
+  button.classList.add("btn-filter");
+  button.innerText = categories[i].name;
+  sectionFilter.appendChild(button);
+}
 
-appartementsButton.addEventListener("click", () => {
 
-  const appartementsFiltered = works.filter(function (appartementsFilter) {
+const filterList = document.querySelectorAll(".btn-filter");
 
-    if (appartementsFilter.category.name == "Appartements") {
-      return appartementsFilter;
-    }
-  });
-  // Deleting work and regenerating only corresponding works
-  document.querySelector(".gallery").innerHTML = "";
-  genererProjet(appartementsFiltered)
-})
 
-/* Hotel & restaurant FILTER */
-const hotelrestaurantButton = document.querySelector(".btn-hotelrestaurant");
 
-hotelrestaurantButton.addEventListener("click", () => {
+// their eventlistener
 
-  const hotelrestaurantFiltered = works.filter(function (hotelrestaurantFilter) {
+for (let i = 0; i < filterList.length; i++) {
+  filterList[i].addEventListener("click", () => {
+    removeAllSelectedClass();
+    filterList[i].classList.add("--selected")
 
-    if (hotelrestaurantFilter.category.name == "Hotels & restaurants") {
-      return hotelrestaurantFilter;
-    }
-  });
-  // Deleting work and regenerating only corresponding works
-  document.querySelector(".gallery").innerHTML = "";
-  genererProjet(hotelrestaurantFiltered)
-})
+    const worksFiltered = works.filter(function (worksFiltering) {
+      if (worksFiltering.category.name == categories[i].name) {
+        return worksFiltering;
+      }
+    });
+    // Deleting all works and regenerating only corresponding works
+    document.querySelector(".gallery").innerHTML = "";
+    genererProjet(worksFiltered);
+  })
+};
+
+// function that allow to remove "--selected" class on everyitem but the selected one
+function removeAllSelectedClass() {
+  const buttonList = document.querySelectorAll(".btn-filter, .btn-nofilter")
+  for (let i = 0; i < buttonList.length; i++) {
+    buttonList[i].classList.remove("--selected");
+  }
+}
