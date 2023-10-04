@@ -19,10 +19,8 @@
 }
 
 .modify {
-  position: relative;
   display: flex;
   flex-direction: row;
-  justify-content: center;
   gap: 0.3em;
-  margin-left: -26em;
+  grid-column-start: 3;
 }

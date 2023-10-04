@@ -1,0 +1,148 @@
+*{
+  box-sizing: border-box;
+}
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+}
+
+.modal-frame {
+  background-color: white;
+  width: 630px;
+  height: 690px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-galery {
+  padding: 0px 105px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-column-gap: 10px;
+  grid-row-gap: 30px;
+  padding-bottom: 65px;
+}
+
+.js-modal{
+  display: flex;
+  width:fit-content;
+  gap: 5px;
+  text-decoration: none;
+  color: black;
+}
+
+.js-modal:visited{
+  color: inherit;
+}
+
+.js-modal-close{
+  align-self: end;
+  width: fit-content;
+  font-size: 16px;
+  margin: 25px 30px 10px 0;
+  cursor:pointer;
+}
+
+.js-modal-return{
+  position: absolute;
+  width: fit-content;
+  margin: 25px 0 10px 30px;
+  font-size: 21px;
+}
+
+h3{
+  text-align: center;
+  font-size: 26px;
+  padding-bottom: 40px;
+  font-weight: 200;
+}
+
+.modal-galery img{
+  width: 100%;
+}
+
+.line{
+  align-self: center;
+border-bottom: 1px solid;
+  width: 420px;
+  border-color: #B3B3B3;
+  margin-bottom: 30px;
+}
+
+.btn-delete{
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 5px;
+  right: 5px;
+  width: 17px;
+  height: 17px;
+  border-radius: 2px;
+  background-color: black;
+  cursor: pointer;
+}
+
+.delete-icon{
+  font-weight: 600;
+  color: white;
+  font-size: 12px;
+
+}
+
+.addButton{
+  align-self: center;
+  color: white;
+  font-family: "Syne";
+  background-color: #1d6154;
+  border: none;
+  height: 35px;
+  width: 240px;
+  border-radius: 60px;
+  margin-bottom: 45px;
+}
+
+
+/*          Add picture section          */
+
+.addpicture-wrap{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.chooseImg-wrap{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 15px 0 20px;
+  background-color: #E8F1F6;
+  width: 420px;
+}
+
+.chooseImg-wrap i{
+  font-size: 76px;
+  color: #B9C5CC;
+}
+
+.addTitle-display{
+
+}
+
+.addCategory-display{
+
+}
+
