@@ -163,28 +163,109 @@ async function editWorksInterface(){
 } 
 
 /*               Contenu Fenetre modale : Ajout de Photo          */
-function submitNewWorksInterface(){
+async function submitNewWorksInterface(){
   const modalFrame = document.querySelector(".modal-frame");
 
   modalExitButton();
   returnArrow();
-  modalTitle("Ajout Photo")
+  modalTitle("Ajout Photo");
 
   // Création contenu HTML/CSS de la modal ajout photo
   const form = document.createElement("form");
-  form.classList.add("addpicture-wrap")
-  modalFrame.appendChild(form)
-  //Element qui enveloppera la parti du form qui aura l'option d'Ajouter une photo
+  form.classList.add("addpicture-wrap");
+  modalFrame.appendChild(form);
+  //Parti zone Ajouter photo
   const chooseImgWrap = document.createElement("div")
   chooseImgWrap.classList.add("chooseImg-wrap")
   //Logo
   const chooseImgLogo = document.createElement("i")
   chooseImgLogo.classList.add("fa-regular","fa-image")
-
-
+  //Le bouton "Ajouter Photo"
+  //Label
+  const labelAddPicture = document.createElement("label");
+  labelAddPicture.setAttribute("for","addPicture-btn");
+  labelAddPicture.classList.add("addPicture-label")
+  labelAddPicture.innerHTML="+ Ajouter photo";
+  //Input
+  const addPicture = document.createElement("input");
+  addPicture.setAttribute("name","addPicture");
+  addPicture.setAttribute("type","file");
+  addPicture.setAttribute("id","addPicture-btn");
+  //subtite-info
+  const infoAddPicture = document.createElement("p");
+  infoAddPicture.classList.add("infoAddPicture");
+  infoAddPicture.innerText = "jpg, png : 4mo max"
+  //Append elements
   form.appendChild(chooseImgWrap)
   chooseImgWrap.appendChild(chooseImgLogo)
+  chooseImgWrap.appendChild(labelAddPicture)
+  chooseImgWrap.appendChild(addPicture)
+  chooseImgWrap.appendChild(infoAddPicture)
 
+  //Form Title & Category
+  //Title
+  const titleLabel = document.createElement("label");
+  titleLabel.setAttribute("for","title")
+  titleLabel.classList.add("label-form")
+  titleLabel.innerText="Titre"
+  const titleInput = document.createElement("input");
+  titleInput.setAttribute("type","text");
+  titleInput.setAttribute("name","title");
+  titleInput.setAttribute("id","title");
+  titleInput.innerText = "Titre";
+  form.appendChild(titleLabel)
+  form.appendChild(titleInput)
+
+  await categoryList();
+
+  const line = document.createElement("div")
+  line.classList.add("line")
+  form.appendChild(line);
+  
+  const buttonSendNewWork = document.createElement("button")
+  buttonSendNewWork.classList.add("sendWork-btn")
+  buttonSendNewWork.innerText="Valider"
+  form.appendChild(buttonSendNewWork);
+
+
+  form.addEventListener("submit", (e)=>{
+    e.preventDefault(); 
+
+    const data = {
+      imageUrl: e.target.querySelector("[name=addPicture]").value,
+      title: e.target.querySelector("[name=title]").value,
+      category: e.target.querySelector("[name=category]").value
+    }
+
+    console.log(data)
+  })
+}
+
+
+async function categoryList(){
+  console.log("1")
+  const categorieFetch = await fetch ("http://localhost:5678/api/categories");
+  const categories = await categorieFetch.json();
+  const form = document.querySelector(".addpicture-wrap");
+
+  const categoryLabel = document.createElement("label");
+  categoryLabel.setAttribute("for","category-form")
+  categoryLabel.classList.add("label-form")
+  categoryLabel.innerText ="Catégorie"
+
+  const categoryInput = document.createElement("select");
+  categoryInput.setAttribute("name","category")
+  categoryInput.setAttribute("id","category")
+
+  for(let i=0; i< categories.length; i++){
+    const option = document.createElement("option");
+    option.setAttribute("value",`${categories[i].id}`);
+    option.innerText = categories[i].name;
+    categoryInput.appendChild(option);
+  }
+
+  form.appendChild(categoryLabel)
+  form.appendChild(categoryInput)
 }
 
 //Exit button
@@ -225,6 +306,7 @@ function line(){
   line.classList.add("line")
   modalFrame.appendChild(line)
 }
+
 
 const stopPropagation = function (e) {
   e.stopPropagation()
