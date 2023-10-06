@@ -31,7 +31,7 @@ loginForm.addEventListener("submit", (event) => {
 
       } else {
 
-        alert("Identifiants incorrects. Veuillez réessayer.");
+        alert("Erreur dans l'identifiant ou le mot de passe.");
       }
     })
 }

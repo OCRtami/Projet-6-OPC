@@ -77,30 +77,6 @@ function modalFrame() {
   modalOverAll.appendChild(modalFrame);
 }
 
-const openModal = function () {
-  const target = document.getElementById("modal1");
-  //Cette ligne va permettre à "display: none" de devenir null, ce qui aura...
-  //...pour effet de laisser le CSS prendre le relais sur l'affichage de "modal1"...
-  //... qui donc aura comme valeur "flex"...
-  target.style.display = null;
-  target.removeAttribute("aria-hidden");
-  target.setAttribute("aria-modal", "true");
-  
-  //Cette partie la, permet de définir les actions qui vont fermer la fenetre modale...
-  //...la première ligne permet de fermer en cliquant dans la zone extérieur...
-  //...de la fenetre, c'est à dire en cliquand sur l'élement "const target"...
-  target.addEventListener("click", closeModal);
-  //...la deuxième ligne permet de fermer en cliquant sur l'élement qui a comme classe...
-  //..."js-modal", c'est à dire le bouton "X" dans la fenetre...
-  target.querySelector(".js-modal-close").addEventListener("click", closeModal);
-  // ???
-  target.querySelector(".js-modal-stop").addEventListener("click", stopPropagation);
-}
-
-const closeModal = function () {
-  document.getElementById("modal1").remove();
-}
-
 /*            Contenu Fenetre modale : Modifier Galerie          */
 async function editWorksInterface(){
 
@@ -162,7 +138,7 @@ async function editWorksInterface(){
   })
 } 
 
-/*               Contenu Fenetre modale : Ajout de Photo          */
+/*            Contenu Fenetre modale : Ajout de Photo          */
 async function submitNewWorksInterface(){
   const modalFrame = document.querySelector(".modal-frame");
 
@@ -174,9 +150,11 @@ async function submitNewWorksInterface(){
   const form = document.createElement("form");
   form.classList.add("addpicture-wrap");
   modalFrame.appendChild(form);
+
   //Parti zone Ajouter photo
   const chooseImgWrap = document.createElement("div")
   chooseImgWrap.classList.add("chooseImg-wrap")
+  form.appendChild(chooseImgWrap)
   //Logo
   const chooseImgLogo = document.createElement("i")
   chooseImgLogo.classList.add("fa-regular","fa-image")
@@ -191,23 +169,38 @@ async function submitNewWorksInterface(){
   addPicture.setAttribute("name","addPicture");
   addPicture.setAttribute("type","file");
   addPicture.setAttribute("id","addPicture-btn");
-  //subtite-info
+  addPicture.setAttribute("accept","image/png, image/jpeg, image/jpg")
+  //subtitle-info
   const infoAddPicture = document.createElement("p");
   infoAddPicture.classList.add("infoAddPicture");
   infoAddPicture.innerText = "jpg, png : 4mo max"
-  //Append elements
-  form.appendChild(chooseImgWrap)
+
   chooseImgWrap.appendChild(chooseImgLogo)
   chooseImgWrap.appendChild(labelAddPicture)
   chooseImgWrap.appendChild(addPicture)
   chooseImgWrap.appendChild(infoAddPicture)
+  
+  //EventListener that display a preview of selected picture
+  addPicture.addEventListener("change",() => {
+    chooseImgLogo.style.display="none";
+    labelAddPicture.style.display="none";
+    addPicture.style.display="none";
+    infoAddPicture.style.display="none";
+
+    const imgPath = URL.createObjectURL(addPicture.files[0]);
+    const displayImg = document.createElement("img");
+    displayImg.src=imgPath;
+    displayImg.classList.add("displayedImg")
+    chooseImgWrap.appendChild(displayImg);
+
+  })
 
   //Form Title & Category
-  //Title
   const titleLabel = document.createElement("label");
   titleLabel.setAttribute("for","title")
   titleLabel.classList.add("label-form")
   titleLabel.innerText="Titre"
+  //TitleInput
   const titleInput = document.createElement("input");
   titleInput.setAttribute("type","text");
   titleInput.setAttribute("name","title");
@@ -228,22 +221,54 @@ async function submitNewWorksInterface(){
   form.appendChild(buttonSendNewWork);
 
 
-  form.addEventListener("submit", (e)=>{
+  form.addEventListener("submit", async(e)=>{
     e.preventDefault(); 
 
-    const data = {
-      imageUrl: e.target.querySelector("[name=addPicture]").value,
-      title: e.target.querySelector("[name=title]").value,
-      category: e.target.querySelector("[name=category]").value
-    }
+    const formData = new FormData();
+    const imageInput = e.target.querySelector("[name=addPicture]");
 
-    console.log(data)
+    formData.append("image", imageInput.files[0]);
+    formData.append("title", e.target.querySelector("[name=title]").value)
+    formData.append("category", e.target.querySelector("[name=category]").value)
+
+    await fetch("http://localhost:5678/api/works", {
+      method: "POST",
+      headers: {"Authorization": `Bearer ${window.sessionStorage.getItem("myToken")}`},
+      body: formData
+    })
+    //Affiche une alerte si la reponse != true
+    .then(response => {
+      if(!response.ok){
+        if(response.status == 400){
+          window.alert("Veuillez vérifier que vous avez bien entré le titre.")
+        }
+        if(response.status == 500){
+          window.alert("Veuillez vérifier que vous avez choisi une image.")
+        }
+      } else {
+        document.getElementById("addPicture-btn").value = "";
+        document.getElementById("title").value = "";
+        document.getElementById("category").value = 1;
+        refreshGallery();
+        selectedImg = document.querySelector(".displayedImg");
+        selectedImg.remove();
+        
+
+        const labelAddPicture = document.querySelector(".addPicture-label");
+        const chooseImgLogo = document.querySelector(".fa-image");
+        const infoAddPicture = document.querySelector(".infoAddPicture");
+
+        chooseImgLogo.style.display="block";
+        labelAddPicture.style.display="flex";
+        infoAddPicture.style.display="block";
+
+      }
+
+    });
   })
 }
 
-
 async function categoryList(){
-  console.log("1")
   const categorieFetch = await fetch ("http://localhost:5678/api/categories");
   const categories = await categorieFetch.json();
   const form = document.querySelector(".addpicture-wrap");
@@ -291,27 +316,9 @@ function returnArrow(){
   })
 }
 
-//Function that create the title of the window (titleSTring = Title InnerText)
-function modalTitle(titleString){
-  const modalFrame = document.querySelector(".modal-frame");
-  const modalTitle = document.createElement("h3")
-  modalTitle.innerText= titleString;
-  modalFrame.appendChild(modalTitle);
-}
-
-//Function that draw the line in the modal window to separate elements
-function line(){
-  const modalFrame = document.querySelector(".modal-frame")
-  const line = document.createElement("div")
-  line.classList.add("line")
-  modalFrame.appendChild(line)
-}
-
-
 const stopPropagation = function (e) {
   e.stopPropagation()
 }
-
 
 async function refreshGallery() {
   const workFetch = await fetch ("http://localhost:5678/api/works");
@@ -375,6 +382,45 @@ async function refreshEditGallery() {
     })
     
   }
+}
+
+const openModal = function () {
+  const target = document.getElementById("modal1");
+  //Cette ligne va permettre à "display: none" de devenir null, ce qui aura...
+  //...pour effet de laisser le CSS prendre le relais sur l'affichage de "modal1"...
+  //... qui donc aura comme valeur "flex"...
+  target.style.display = null;
+  target.removeAttribute("aria-hidden");
+  target.setAttribute("aria-modal", "true");
+  
+  //Cette partie la, permet de définir les actions qui vont fermer la fenetre modale...
+  //...la première ligne permet de fermer en cliquant dans la zone extérieur...
+  //...de la fenetre, c'est à dire en cliquand sur l'élement "const target"...
+  target.addEventListener("click", closeModal);
+  //...la deuxième ligne permet de fermer en cliquant sur l'élement qui a comme classe...
+  //..."js-modal", c'est à dire le bouton "X" dans la fenetre...
+  target.querySelector(".js-modal-close").addEventListener("click", closeModal);
+  target.querySelector(".js-modal-stop").addEventListener("click", stopPropagation);
+}
+
+const closeModal = function () {
+  document.getElementById("modal1").remove();
+}
+
+//Function that create the title of the window (titleSTring = Title InnerText)
+function modalTitle(titleString){
+  const modalFrame = document.querySelector(".modal-frame");
+  const modalTitle = document.createElement("h3")
+  modalTitle.innerText= titleString;
+  modalFrame.appendChild(modalTitle);
+}
+
+//Function that draw the line in the modal window to separate elements
+function line(){
+  const modalFrame = document.querySelector(".modal-frame")
+  const line = document.createElement("div")
+  line.classList.add("line")
+  modalFrame.appendChild(line)
 }
 
 window.addEventListener("keydown", function (e) {
