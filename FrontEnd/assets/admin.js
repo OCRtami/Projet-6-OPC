@@ -118,6 +118,7 @@ async function editWorksInterface(){
         method:"DELETE",
         headers: {"Authorization": `Bearer ${window.sessionStorage.getItem("myToken")}`}
       })
+      failurePopUp("Supprimé","120")
       refreshEditGallery();
       refreshGallery();
     })
@@ -169,7 +170,7 @@ async function submitNewWorksInterface(){
   addPicture.setAttribute("name","addPicture");
   addPicture.setAttribute("type","file");
   addPicture.setAttribute("id","addPicture-btn");
-  addPicture.setAttribute("accept","image/png, image/jpeg, image/jpg")
+  addPicture.setAttribute("accept",".png, .jpeg, .jpg")
   //subtitle-info
   const infoAddPicture = document.createElement("p");
   infoAddPicture.classList.add("infoAddPicture");
@@ -220,7 +221,6 @@ async function submitNewWorksInterface(){
   buttonSendNewWork.innerText="Valider"
   form.appendChild(buttonSendNewWork);
 
-
   form.addEventListener("submit", async(e)=>{
     e.preventDefault(); 
 
@@ -240,10 +240,11 @@ async function submitNewWorksInterface(){
     .then(response => {
       if(!response.ok){
         if(response.status == 400){
-          window.alert("Veuillez vérifier que vous avez bien entré le titre.")
+          failurePopUp("Veuillez vérifier le titre et la categorie.","400")
+
         }
         if(response.status == 500){
-          window.alert("Veuillez vérifier que vous avez choisi une image.")
+          failurePopUp("Veuillez choisir une image.","300")
         }
       } else {
         document.getElementById("addPicture-btn").value = "";
@@ -262,11 +263,15 @@ async function submitNewWorksInterface(){
         labelAddPicture.style.display="flex";
         infoAddPicture.style.display="block";
 
+        successPopUp();
       }
 
     });
   })
+  
 }
+
+
 
 async function categoryList(){
   const categorieFetch = await fetch ("http://localhost:5678/api/categories");
@@ -281,6 +286,15 @@ async function categoryList(){
   const categoryInput = document.createElement("select");
   categoryInput.setAttribute("name","category")
   categoryInput.setAttribute("id","category")
+
+  //Option par defaut
+  const option = document.createElement("option");
+  option.setAttribute("value",`none`);
+  option.setAttribute("selected","");
+  option.setAttribute("disabled","");
+  option.setAttribute("hidden","");
+  option.innerText = "Choisissez une catégorie";
+  categoryInput.appendChild(option);
 
   for(let i=0; i< categories.length; i++){
     const option = document.createElement("option");
@@ -407,6 +421,39 @@ const closeModal = function () {
   document.getElementById("modal1").remove();
 }
 
+function successPopUp(){
+  const popUp= document.createElement("div");
+  popUp.classList.add("popUp");
+  this.document.body.appendChild(popUp)
+  popUp.style.fontFamily="Syne";
+  popUp.innerText="Photo envoyée."
+  popUp.addEventListener("animationend", ()=>{
+  popUp.remove();
+
+  popUp.addEventListener("animationend", ()=>{
+    popUp.remove();
+  })
+  })
+}
+
+function failurePopUp(errorInnerText,width){
+  const popUp= document.createElement("div");
+  popUp.classList.add("failurePopUp");
+  this.document.body.appendChild(popUp);
+  popUp.style.fontFamily="Syne";
+  popUp.style.width=width+"px";
+  popUp.style.minWidth=width+"px";
+  popUp.style.marginLeft=-width/2+"px";
+  popUp.innerText=errorInnerText;
+
+  popUp.addEventListener("animationend", ()=>{
+  popUp.remove();
+
+  popUp.addEventListener("animationend", ()=>{
+    popUp.remove();
+  })
+  })
+}
 //Function that create the title of the window (titleSTring = Title InnerText)
 function modalTitle(titleString){
   const modalFrame = document.querySelector(".modal-frame");
@@ -428,5 +475,13 @@ window.addEventListener("keydown", function (e) {
   console.log()
   if (e.key === "Escape" || e.key === "Esc") {
     closeModal(e)
+  }
+})
+
+window.addEventListener("keydown", function (e) {
+
+  console.log()
+  if (e.key === "G" || e.key === "g") {
+
   }
 })

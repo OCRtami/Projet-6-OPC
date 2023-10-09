@@ -26,12 +26,17 @@ loginForm.addEventListener("submit", (event) => {
       // Si la réponse contient une ID et un token...
       if (response.userId && response.token) {
         window.sessionStorage.setItem("myToken", response.token);
-        alert("Connexion réussie !");
         window.location.href = "index.html";
 
       } else {
-
-        alert("Erreur dans l'identifiant ou le mot de passe.");
+        const popUp= document.createElement("div");
+        popUp.classList.add("failurePopUp");
+        this.document.body.appendChild(popUp);
+        popUp.style.fontFamily="Syne";
+        popUp.style.width="400px";
+        popUp.style.minWidth="400px";
+        popUp.style.marginLeft="-200px";
+        popUp.innerText="Erreur dans l'identifiant ou le mot de passe.";
       }
     })
 }

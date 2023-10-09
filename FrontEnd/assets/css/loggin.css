@@ -16,6 +16,8 @@
 }
 
 .btn-connexion {
+  margin-top: 40px;
+  align-self: center;
   border: 1px solid;
   padding: 9px 15px;
   border-radius: 60px;
@@ -24,9 +26,56 @@
   color: white;
   background-color: #1d6154;
   font-weight: 700;
+  width: 180px;
+  transition: 0.2s;
+  cursor: pointer;
+}
+.btn-connexion:hover{
+  transition: 0.2s;
+  background-color: #248d7a;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
+}
+
+.failurePopUp{
+  position: fixed;
+  color: white;
+  background-color: rgb(150, 32, 32);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 50%;
+  top: -50px;
+  border-radius: 5px;
+  height: 40px;
+  animation-name: failurePopingUp;
+  animation-duration: 4s;
+  animation-fill-mode:forwards;
+  z-index: 20;
+}
+@keyframes failurePopingUp{
+  0%{
+    color: rgba(255, 255, 255, 0);
+  background-color: rgb(150, 32, 32,0);
+    
+  }
+
+  20%{
+    top: 60px;
+    color: rgba(255, 255, 255, 1);
+    background-color: rgb(150, 32, 32,1);
+  }
+  60%{
+    color: rgba(255, 255, 255, 1);
+    background-color: rgb(150, 32, 32,1);
+  }
+  100%{
+    top: 60px;
+    background-color: rgb(150, 32, 32,0);
+    display: none;
+    color: rgba(255, 255, 255, 0)
+  }
 }

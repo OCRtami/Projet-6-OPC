@@ -61,6 +61,7 @@
   width: fit-content;
   margin: 25px 0 10px 30px;
   font-size: 21px;
+  cursor: pointer;
 }
 
 h3{
@@ -117,9 +118,16 @@ h3{
   height: 35px;
   width: 240px;
   border-radius: 60px;
-
+  transition: 0.2s;
+  cursor: pointer;
 }
 
+.addButton:hover{
+
+  transition: 0.2s;
+  background-color: #248d7a;
+  
+}
 
 /*          Add picture section          */
 
@@ -161,9 +169,15 @@ h3{
   height: 35px;
   color: #306685;
   background-color: #CBD6DC;
+  transition: 0.2s;
   border-radius: 50px;
   font-size: 16px;
+  cursor:pointer;
+}
 
+.addPicture-label:hover{
+  background-color: #bfc7cc;
+  transition: 0.2s;
 }
 
 .infoAddPicture{
@@ -209,8 +223,98 @@ h3{
   background-color: #1D6154;
   color: white;
   border-radius: 60px;
+  cursor:pointer;
+  transition: 0.2s;
+}
+
+.sendWork-btn:hover{
+  transition: 0.2s;
+  background-color: #248d7a;
 }
 
 .displayedImg{
   height: 100%;
+}
+
+.popUp{
+  position: fixed;
+  color: white;
+  background-color: rgb(29, 97, 84);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 50%;
+  top: -50px;
+  margin-left: -100px;
+  border-radius: 5px;
+  height: 40px;
+  width: 200px;
+  animation-name: popingUp;
+  animation-duration: 2s;
+  animation-fill-mode:forwards;
+  z-index: 20;
+}
+
+@keyframes popingUp{
+  0%{
+    color: rgba(255, 255, 255, 0);
+    background-color: rgb(29, 97, 84,0);
+    
+  }
+
+  20%{
+    top: 60px;
+    color: rgba(255, 255, 255, 1);
+    background-color: rgb(29, 97, 84,1);
+  }
+  60%{
+    color: rgba(255, 255, 255, 1);
+    background-color: rgb(29, 97, 84,1);
+  }
+  100%{
+    top: 60px;
+    background-color: rgb(29, 97, 84,0);
+    display: none;
+    color: rgba(255, 255, 255, 0)
+  }
+}
+
+.failurePopUp{
+  position: fixed;
+  color: white;
+  background-color: rgb(150, 32, 32);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 50%;
+  top: -50px;
+  border-radius: 5px;
+  height: 40px;
+  animation-name: failurePopingUp;
+  animation-duration: 4s;
+  animation-fill-mode:forwards;
+  z-index: 20;
+}
+@keyframes failurePopingUp{
+  0%{
+    color: rgba(255, 255, 255, 0);
+  background-color: rgb(150, 32, 32,0);
+    
+  }
+
+  20%{
+    top: 60px;
+    color: rgba(255, 255, 255, 1);
+    background-color: rgb(150, 32, 32,1);
+  }
+  60%{
+    color: rgba(255, 255, 255, 1);
+    background-color: rgb(150, 32, 32,1);
+  }
+  100%{
+    top: 60px;
+    background-color: rgb(150, 32, 32,0);
+    display: none;
+    color: rgba(255, 255, 255, 0)
+  }
 }
