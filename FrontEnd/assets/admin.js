@@ -392,7 +392,7 @@ async function refreshEditGallery() {
       })
       refreshEditGallery();
       refreshGallery();
-
+      failurePopUp("Supprimé","120")
     })
     
   }
