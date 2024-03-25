@@ -1,7 +1,7 @@
 # Sophie Bluel - Projet 6
 
-Projet n°6 du parcours de formation intégrateur web d'OpenClassrooms.
-Le but est de réaliser un site dynamique en javascript natif et également d'intéragir avec une API donné.
+- Projet n°6 du parcours de formation intégrateur web d'OpenClassrooms.
+- Le but est de réaliser un site dynamique en javascript natif et également d'intéragir avec une API donné.
 
 
 ## Information pour le lancer le code
