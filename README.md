@@ -1,6 +1,8 @@
-# Portfolio-architecte-sophie-bluel
+# Sophie Bluel - Projet 6
 
-Code du projet 6 d'intégrateur web.
+Projet n°6 du parcours de formation intégrateur web d'OpenClassrooms.
+Le but est de réaliser un site dynamique en javascript natif et également d'intéragir avec une API donné.
+
 
 ## Information pour le lancer le code
 
